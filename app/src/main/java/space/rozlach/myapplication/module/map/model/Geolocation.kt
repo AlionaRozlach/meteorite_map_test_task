@@ -11,6 +11,10 @@ import com.google.gson.annotations.SerializedName
 data class Geolocation (
     @SerializedName("type")
     @Expose
-    private val type: String? = null,
+    var type: String? = null,
+
+    @SerializedName("coordinates")
+    @Expose
+    var coordinates: List<Double>? = null
 
 )

@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.gson.annotations.Expose
 
 import com.google.gson.annotations.SerializedName
+import com.google.maps.android.clustering.ClusterItem
 import org.jetbrains.annotations.NotNull
 
 @Entity(tableName = "meteorites_info")
@@ -51,6 +52,20 @@ data class Meteorite(
 
 //    @SerializedName("geolocation")
 //    @Expose
-//    @Embedded
 //    var geolocation: Geolocation? = null
-)
+): ClusterItem{
+    override fun getPosition(): LatLng {
+        return LatLng( recLat!!.fullTrim().toDouble(),recLong!!.fullTrim().toDouble())
+    }
+
+    override fun getTitle(): String? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getSnippet(): String? {
+        TODO("Not yet implemented")
+    }
+
+    private fun String.fullTrim() = trim().replace("\uFEFF", "")
+
+}

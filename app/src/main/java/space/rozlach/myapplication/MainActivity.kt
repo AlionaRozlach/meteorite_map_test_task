@@ -2,15 +2,13 @@ package space.rozlach.myapplication
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import okhttp3.OkHttpClient
 import space.rozlach.myapplication.module.MeteoriteViewModel
-import space.rozlach.myapplication.module.api.ApiFactory
+import space.rozlach.myapplication.module.map.fragment.MapFragment
+import space.rozlach.myapplication.module.map.model.Meteorite
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,16 +18,30 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel = ViewModelProviders.of(this).get(MeteoriteViewModel::class.java)
+        var list: List<Meteorite>? = null
+        val myFragment = MapFragment()
+        viewModel = ViewModelProviders.of(this)[MeteoriteViewModel::class.java]
         viewModel.meteoritesList.observe(this, Observer{
             println("SUCCCESS IN ACTIVITY")
+            list = it
             println(it)
+            println(it.size)
+            if(myFragment.isAdded)
+                supportFragmentManager.beginTransaction().replace(R.id.frame_layout,myFragment )
+                .commit()
+            else
+                supportFragmentManager.beginTransaction().add(R.id.frame_layout,myFragment )
+                    .commit()
         })
 
-        viewModel.getDetailInfo("Boumdeid (2011)").observe(this, Observer {
-            println(it)
-            println("Success Detail About Meteorite")
-        })
+
+
+//        viewModel.getDetailInfo("Boumdeid (2011)").observe(this, Observer {
+//            println(it)
+//            println("Success Detail About Meteorite")
+//        })
+
+
 
     }
 

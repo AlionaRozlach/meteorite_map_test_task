@@ -3,6 +3,7 @@ package space.rozlach.myapplication.module
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -27,12 +28,11 @@ class MeteoriteViewModel(application: Application) : AndroidViewModel(applicatio
         return db.meteoritesInfoDao().getInfoAboutMeteorite(name)
     }
 
+//    fun isLocationPermissionAccepted():MutableLiveData<Boolean?>
+
     private fun loadData() {
         val disposable = ApiFactory.apiService.getListOfMeteorites()
             .subscribeOn(Schedulers.io())
-            .repeat()
-            .retry()
-            .delay(10, TimeUnit.SECONDS)
             .subscribe(
                 {
                     db.meteoritesInfoDao().insertListOfMeteorites(it)
