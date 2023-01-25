@@ -17,36 +17,38 @@ import java.util.concurrent.TimeUnit
 class MeteoriteViewModel(application: Application) : AndroidViewModel(application) {
     private val db = AppDatabase.getInstance(application)
     private val compositeDisposable = CompositeDisposable()
+//    private val compositeDisposable = CompositeDisposable()
 
     val meteoritesList = db.meteoritesInfoDao().getMeteoritesInfoList()
 
-    init {
-        loadData()
-    }
 
+//    init {
+//        loadData()
+//    }
+//
     fun getDetailInfo(name: String): LiveData<Meteorite> {
         return db.meteoritesInfoDao().getInfoAboutMeteorite(name)
     }
 
 //    fun isLocationPermissionAccepted():MutableLiveData<Boolean?>
 
-    private fun loadData() {
-        val disposable = ApiFactory.apiService.getListOfMeteorites()
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                {
-                    db.meteoritesInfoDao().insertListOfMeteorites(it)
-                    println("SUCCESS")
-                }, {
-                    println("Load data ERRRROR")
-                    println(it.message)
-                }
-            )
-        compositeDisposable.add(disposable)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.dispose()
-    }
+//    private fun loadData() {
+//        val disposable = ApiFactory.apiService.getListOfMeteorites()
+//            .subscribeOn(Schedulers.io())
+//            .subscribe(
+//                {
+//                    db.meteoritesInfoDao().insertListOfMeteorites(it)
+//                    println("SUCCESS")
+//                }, {
+//                    println("Load data ERRRROR")
+//                    println(it.message)
+//                }
+//            )
+//        compositeDisposable.add(disposable)
+//    }
+//
+//    override fun onCleared() {
+//        super.onCleared()
+//        compositeDisposable.dispose()
+//    }
 }

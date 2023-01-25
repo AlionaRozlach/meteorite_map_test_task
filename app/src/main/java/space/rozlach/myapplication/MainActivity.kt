@@ -2,13 +2,11 @@ package space.rozlach.myapplication
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.work.*
 import space.rozlach.myapplication.module.MeteoriteViewModel
 import space.rozlach.myapplication.module.map.fragment.MapFragment
-import space.rozlach.myapplication.module.map.model.Meteorite
+import space.rozlach.myapplication.module.service.MyWorker
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
@@ -18,22 +16,47 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var list: List<Meteorite>? = null
+//        var list: List<Meteorite>? = null
         val myFragment = MapFragment()
-        viewModel = ViewModelProviders.of(this)[MeteoriteViewModel::class.java]
-        viewModel.meteoritesList.observe(this, Observer{
-            println("SUCCCESS IN ACTIVITY")
-            list = it
-            println(it)
-            println(it.size)
-            if(myFragment.isAdded)
+//        viewModel = ViewModelProviders.of(this)[MeteoriteViewModel::class.java]
+//        viewModel.meteoritesList.observe(this, Observer{
+//            println("SUCCCESS IN ACTIVITY")
+//            list = it
+//            println(it)
+//            println(it.size)
+//            if(myFragment.isAdded)
+//                supportFragmentManager.beginTransaction().replace(R.id.frame_layout,myFragment )
+//                .commit()
+//            else
+//                supportFragmentManager.beginTransaction().add(R.id.frame_layout,myFragment )
+//                    .commit()
+//        })
+
+        val workManager = WorkManager.getInstance(application)
+
+//        workManager.cancelAllWorkByTag("my_unique_worker")
+//        workManager.pruneWork()
+
+        val constraint: Constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val workRequest = PeriodicWorkRequest.Builder(MyWorker::class.java, 1, TimeUnit.DAYS)
+            .setConstraints(constraint)
+            .build()
+
+        workManager.enqueueUniquePeriodicWork(
+            "my_unique_worker",
+            ExistingPeriodicWorkPolicy.KEEP,
+            workRequest
+        )
+
+        if(myFragment.isAdded)
                 supportFragmentManager.beginTransaction().replace(R.id.frame_layout,myFragment )
                 .commit()
             else
                 supportFragmentManager.beginTransaction().add(R.id.frame_layout,myFragment )
                     .commit()
-        })
-
 
 
 //        viewModel.getDetailInfo("Boumdeid (2011)").observe(this, Observer {

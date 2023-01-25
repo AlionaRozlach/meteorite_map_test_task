@@ -10,8 +10,6 @@ object ApiFactory {
 
     private const val BASE_URL = "https://data.nasa.gov"
 
-
-
     private val httpClient = OkHttpClient.Builder().addInterceptor { chain ->
         val request: Request =
             chain.request().newBuilder().addHeader("X-App-Token", "R9IJaGqLbAZcDkro3E5qIV4wz").build()

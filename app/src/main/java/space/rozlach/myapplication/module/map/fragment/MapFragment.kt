@@ -33,18 +33,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
     private lateinit var viewModel: MeteoriteViewModel
     private var meteoritesList = mutableListOf<Meteorite>()
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        requestPermission()
-//
-//    }
-
-//    override fun onResume() {
-//        super.onResume()
-//        requestPermission()
-//
-//    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
