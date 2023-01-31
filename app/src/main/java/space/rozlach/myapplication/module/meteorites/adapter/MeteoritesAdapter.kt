@@ -32,6 +32,11 @@ class MeteoritesAdapter(private val meteorites: List<Meteorite>) : RecyclerView.
 
         // sets the text to the textview from our itemHolder class
         holder.textView.text = meteorite.name
+        holder.meteoriteTypeName.text = meteorite.nameType
+        holder.meteoriteMass.text = meteorite.mass
+        holder.meteoriteFall.text = meteorite.fall
+        holder.meteoriteYearFall.text = meteorite.year
+//        holder.textView.text = meteorite.name
 
 
     }
@@ -55,6 +60,10 @@ class MeteoritesAdapter(private val meteorites: List<Meteorite>) : RecyclerView.
     // Holds the views for adding it to image and text
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val textView: TextView = itemView.findViewById(R.id.meteoriteName)
+        val meteoriteTypeName: TextView = itemView.findViewById(R.id.meteoriteTypeName)
+        val meteoriteMass: TextView = itemView.findViewById(R.id.meteoriteMass)
+        val meteoriteFall: TextView = itemView.findViewById(R.id.meteoriteFall)
+        val meteoriteYearFall: TextView = itemView.findViewById(R.id.meteoriteYearFall)
     }
 }
 

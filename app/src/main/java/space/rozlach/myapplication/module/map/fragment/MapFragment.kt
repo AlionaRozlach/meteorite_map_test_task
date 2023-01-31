@@ -11,11 +11,11 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.TileOverlayOptions
 import com.google.maps.android.clustering.ClusterManager
@@ -25,8 +25,8 @@ import space.rozlach.myapplication.MainActivity
 import space.rozlach.myapplication.R
 import space.rozlach.myapplication.module.MeteoriteViewModel
 import space.rozlach.myapplication.module.map.model.Meteorite
-import space.rozlach.myapplication.module.meteorites.fragment.MeteoritesListFragment
 import space.rozlach.myapplication.module.map.other.CustomMapTileProvider
+import space.rozlach.myapplication.module.meteorites.fragment.MeteoritesListFragment
 import space.rozlach.myapplication.other.Constants.REQUEST_CODE_LOCATION_PERMISSIONS
 import space.rozlach.myapplication.other.TrackingUtility
 
@@ -34,7 +34,7 @@ import space.rozlach.myapplication.other.TrackingUtility
 class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListener,
     EasyPermissions.PermissionCallbacks {
 
-    private final  var myMap: GoogleMap? = null
+    private final var myMap: GoogleMap? = null
     private var clusterManager: ClusterManager<Meteorite>? = null
     private lateinit var viewModel: MeteoriteViewModel
     private var meteoritesList = mutableListOf<Meteorite>()
@@ -46,17 +46,24 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
     ): View {
         // Initialize view
 //        requestPermission()
+
         val view: View = inflater.inflate(R.layout.fragment_map, container, false)
         viewModel = ViewModelProviders.of(this)[MeteoriteViewModel::class.java]
 
+//        val viewPager = view.findViewById<ViewPager2>(R.id.swipeViewPager)
+//        val pagerAdapter = SwipeFragmentPagerAdapter(parentFragmentManager,  lifecycle)
+//
+//        pagerAdapter.addFragment(MeteoritesListFragment.newInstance())
+//        viewPager.adapter = pagerAdapter
         // Initialize map fragment
         val supportMapFragment =
             childFragmentManager.findFragmentById(R.id.google_map) as SupportMapFragment
 
-        (activity as MainActivity).supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_layout, MeteoritesListFragment.newInstance(), "findThisFragment")
-            .addToBackStack(null)
-            .commit();
+//        (activity as MainActivity).supportFragmentManager.beginTransaction()
+//            .setCustomAnimations(R.anim.animation_slide_down, R.anim.animation_slide_in)
+//            .replace(R.id.frame_layout, MeteoritesListFragment.newInstance(), "findThisFragment")
+//            .addToBackStack(null)
+//            .commit();
 
         // Async map
         supportMapFragment.getMapAsync(this)
@@ -113,7 +120,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
 
     override fun onStart() {
         super.onStart()
-        if(myMap != null) {
+        if (myMap != null) {
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -126,7 +133,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
         }
     }
 
-    private fun isLocationGranted(){
+    private fun isLocationGranted() {
 
     }
 

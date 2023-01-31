@@ -5,6 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 >
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/swipeViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"/>
     <FrameLayout
     android:id="@+id/container"
     android:layout_width="match_parent"
@@ -15,7 +21,5 @@
         android:id="@+id/google_map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         />
-
-
 
 </RelativeLayout>
