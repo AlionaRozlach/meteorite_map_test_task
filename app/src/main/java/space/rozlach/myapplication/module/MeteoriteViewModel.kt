@@ -30,6 +30,10 @@ class MeteoriteViewModel(application: Application) : AndroidViewModel(applicatio
         return db.meteoritesInfoDao().getInfoAboutMeteorite(name)
     }
 
+    fun getMeteoritesListVM(): LiveData<List<Meteorite>>{
+        return db.meteoritesInfoDao().getMeteoritesInfoList()
+    }
+
 //    fun isLocationPermissionAccepted():MutableLiveData<Boolean?>
 
 //    private fun loadData() {
