@@ -11,7 +11,9 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.ClusterManager
@@ -21,6 +23,7 @@ import space.rozlach.myapplication.MainActivity
 import space.rozlach.myapplication.R
 import space.rozlach.myapplication.module.MeteoriteViewModel
 import space.rozlach.myapplication.module.map.model.Meteorite
+import space.rozlach.myapplication.module.meteorites.fragment.MeteoritesListFragment
 import space.rozlach.myapplication.other.Constants.REQUEST_CODE_LOCATION_PERMISSIONS
 import space.rozlach.myapplication.other.TrackingUtility
 
@@ -47,6 +50,10 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
         val supportMapFragment =
             childFragmentManager.findFragmentById(R.id.google_map) as SupportMapFragment
 
+        (activity as MainActivity).supportFragmentManager.beginTransaction()
+            .replace(R.id.frame_layout, MeteoritesListFragment.newInstance(), "findThisFragment")
+            .addToBackStack(null)
+            .commit();
 
         // Async map
         supportMapFragment.getMapAsync(this)
@@ -57,6 +64,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
 
     override fun onMapReady(map: GoogleMap) {
         myMap = map
+
 
 
 //            myMap.apply {
