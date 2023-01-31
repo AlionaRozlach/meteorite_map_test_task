@@ -13,7 +13,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.TileOverlayOptions
 import com.google.maps.android.clustering.ClusterManager
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -21,6 +23,7 @@ import space.rozlach.myapplication.MainActivity
 import space.rozlach.myapplication.R
 import space.rozlach.myapplication.module.MeteoriteViewModel
 import space.rozlach.myapplication.module.map.model.Meteorite
+import space.rozlach.myapplication.module.map.other.CustomMapTileProvider
 import space.rozlach.myapplication.other.Constants.REQUEST_CODE_LOCATION_PERMISSIONS
 import space.rozlach.myapplication.other.TrackingUtility
 
@@ -96,6 +99,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
             return
         }
         myMap!!.isMyLocationEnabled = true
+
+        myMap!!.addTileOverlay(TileOverlayOptions().tileProvider(CustomMapTileProvider(resources.assets)))
 
     }
 
