@@ -59,7 +59,7 @@ class MeteoritesListFragment : Fragment(){
 //        meteoritesAdapter = MeteoritesAdapter()
 //        recyclerView.adapter = meteoritesAdapter
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = MeteoritesAdapter(list)
+//        recyclerView.adapter = MeteoritesAdapter(this,list)
 
         viewModel = ViewModelProviders.of(this)[MeteoriteViewModel::class.java]
         viewModel.getMeteoritesListVM().observe(activity as MainActivity, Observer {meteorites->

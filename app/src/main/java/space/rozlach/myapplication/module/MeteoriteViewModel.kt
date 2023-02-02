@@ -19,10 +19,14 @@ class MeteoriteViewModel(application: Application) : AndroidViewModel(applicatio
     private val compositeDisposable = CompositeDisposable()
 //    private val compositeDisposable = CompositeDisposable()
 
+    private val mutableSelectedItem = MutableLiveData<Meteorite>()
+
     val meteoritesList = db.meteoritesInfoDao().getMeteoritesInfoList()
+    val selectedItem: LiveData<Meteorite> get() = mutableSelectedItem
 
 
-//    init {
+
+    //    init {
 //        loadData()
 //    }
 //
@@ -32,6 +36,11 @@ class MeteoriteViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun getMeteoritesListVM(): LiveData<List<Meteorite>>{
         return db.meteoritesInfoDao().getMeteoritesInfoList()
+    }
+
+
+    fun selectItem(meteorite: Meteorite) {
+        mutableSelectedItem.value = meteorite
     }
 
 //    fun isLocationPermissionAccepted():MutableLiveData<Boolean?>

@@ -4,13 +4,22 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import space.rozlach.myapplication.R
 import space.rozlach.myapplication.module.map.model.Meteorite
 
-class MeteoritesAdapter(private val meteorites: List<Meteorite>) : RecyclerView.Adapter<MeteoritesAdapter.ViewHolder>() {
+class MeteoritesAdapter(private val fragment: Fragment,private val meteorites: List<Meteorite>) : RecyclerView.Adapter<MeteoritesAdapter.ViewHolder>() {
 //    var meteoriteList = ArrayList<Meteorite?>()
+
+    private val callback: OnClick = fragment as OnClick
+
+
+    interface OnClick {
+        fun onClick(meteorite: Meteorite)
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,6 +46,10 @@ class MeteoritesAdapter(private val meteorites: List<Meteorite>) : RecyclerView.
         holder.meteoriteFall.text = meteorite.fall
         holder.meteoriteYearFall.text = meteorite.year
 //        holder.textView.text = meteorite.name
+
+        holder.itemView.setOnClickListener {
+            callback.onClick(meteorite)
+        }
 
 
     }

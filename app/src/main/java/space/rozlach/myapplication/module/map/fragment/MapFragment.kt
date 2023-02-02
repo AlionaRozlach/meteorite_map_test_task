@@ -1,23 +1,28 @@
 package space.rozlach.myapplication.module.map.fragment
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.viewpager2.widget.ViewPager2
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.TileOverlayOptions
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.maps.android.clustering.ClusterManager
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -26,20 +31,25 @@ import space.rozlach.myapplication.R
 import space.rozlach.myapplication.module.MeteoriteViewModel
 import space.rozlach.myapplication.module.map.model.Meteorite
 import space.rozlach.myapplication.module.map.other.CustomMapTileProvider
-import space.rozlach.myapplication.module.meteorites.fragment.MeteoritesListFragment
+import space.rozlach.myapplication.module.meteorites.adapter.MeteoritesAdapter
+import space.rozlach.myapplication.module.meteorites.fragment.MeteoriteDetailFragment
 import space.rozlach.myapplication.other.Constants.REQUEST_CODE_LOCATION_PERMISSIONS
 import space.rozlach.myapplication.other.TrackingUtility
 
 
 class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListener,
-    EasyPermissions.PermissionCallbacks {
+    EasyPermissions.PermissionCallbacks, MeteoritesAdapter.OnClick {
 
     private final var myMap: GoogleMap? = null
     private var clusterManager: ClusterManager<Meteorite>? = null
     private lateinit var viewModel: MeteoriteViewModel
     private var meteoritesList = mutableListOf<Meteorite>()
+    var mBottomSheetBehavior2: BottomSheetBehavior<View>? = null
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var meteoritesAdapter: MeteoritesAdapter
+    private var list = ArrayList<Meteorite>()
 
-
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,27 +60,60 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
         val view: View = inflater.inflate(R.layout.fragment_map, container, false)
         viewModel = ViewModelProviders.of(this)[MeteoriteViewModel::class.java]
 
-//        val viewPager = view.findViewById<ViewPager2>(R.id.swipeViewPager)
-//        val pagerAdapter = SwipeFragmentPagerAdapter(parentFragmentManager,  lifecycle)
-//
-//        pagerAdapter.addFragment(MeteoritesListFragment.newInstance())
-//        viewPager.adapter = pagerAdapter
-        // Initialize map fragment
         val supportMapFragment =
             childFragmentManager.findFragmentById(R.id.google_map) as SupportMapFragment
 
-//        (activity as MainActivity).supportFragmentManager.beginTransaction()
-//            .setCustomAnimations(R.anim.animation_slide_down, R.anim.animation_slide_in)
-//            .replace(R.id.frame_layout, MeteoritesListFragment.newInstance(), "findThisFragment")
-//            .addToBackStack(null)
-//            .commit();
+        val bottomSheet: View = view.findViewById(R.id.bottom_sheet2)
+        mBottomSheetBehavior2 = BottomSheetBehavior.from(bottomSheet)
+
+
+        mBottomSheetBehavior2!!.peekHeight = 300;
+
+
+        mBottomSheetBehavior2!!.addBottomSheetCallback(object : BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                // React to state change
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    mBottomSheetBehavior2!!.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+
+
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                // React to dragging events
+            }
+
+        })
+
 
         // Async map
         supportMapFragment.getMapAsync(this)
+
+        recyclerView = view.findViewById(R.id.meteoritesRecyclerView)
+//
+//        meteoritesAdapter = MeteoritesAdapter()
+//        recyclerView.adapter = meteoritesAdapter
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = MeteoritesAdapter(this, list)
+
+        viewModel = ViewModelProviders.of(this)[MeteoriteViewModel::class.java]
+        viewModel.getMeteoritesListVM().observe(activity as MainActivity, Observer { meteorites ->
+            list.removeAll(list)
+            // update with the new events that we have observed.
+            list.addAll(meteorites)
+            // tell the recycler view to update.
+            recyclerView.adapter!!.notifyDataSetChanged()
+        })
+
+        recyclerView.setOnTouchListener(OnTouchListener { v, event ->
+            v.parent.requestDisallowInterceptTouchEvent(true)
+            v.onTouchEvent(event)
+            true
+        })
         // Return view
         return view
     }
-
 
     override fun onMapReady(map: GoogleMap) {
         myMap = map
@@ -183,6 +226,16 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
+
+    override fun onClick(meteorite: Meteorite) {
+        viewModel.selectItem(meteorite)
+        val meteoriteDetailFragment = MeteoriteDetailFragment()
+
+        (activity as MainActivity).supportFragmentManager.beginTransaction()
+            .add(R.id.frame_layout, MeteoriteDetailFragment(), null)
+           .addToBackStack("")
+            .commit()
     }
 
 }
