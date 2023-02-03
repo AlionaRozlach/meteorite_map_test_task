@@ -49,7 +49,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
     private lateinit var meteoritesAdapter: MeteoritesAdapter
     private var list = ArrayList<Meteorite>()
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,7 +58,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
 //        requestPermission()
 
         val view: View = inflater.inflate(R.layout.fragment_map, container, false)
-        viewModel = ViewModelProviders.of(this)[MeteoriteViewModel::class.java]
+        viewModel = ViewModelProviders.of(requireActivity())[MeteoriteViewModel::class.java]
 
         val supportMapFragment =
             childFragmentManager.findFragmentById(R.id.google_map) as SupportMapFragment
@@ -87,17 +87,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
         })
 
 
-        // Async map
-        supportMapFragment.getMapAsync(this)
 
-        recyclerView = view.findViewById(R.id.meteoritesRecyclerView)
-//
-//        meteoritesAdapter = MeteoritesAdapter()
-//        recyclerView.adapter = meteoritesAdapter
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = MeteoritesAdapter(this, list)
 
-        viewModel = ViewModelProviders.of(this)[MeteoriteViewModel::class.java]
         viewModel.getMeteoritesListVM().observe(activity as MainActivity, Observer { meteorites ->
             list.removeAll(list)
             // update with the new events that we have observed.
@@ -106,12 +97,13 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
             recyclerView.adapter!!.notifyDataSetChanged()
         })
 
-        recyclerView.setOnTouchListener(OnTouchListener { v, event ->
-            v.parent.requestDisallowInterceptTouchEvent(true)
-            v.onTouchEvent(event)
-            true
-        })
-        // Return view
+
+        recyclerView = view.findViewById(R.id.meteoritesRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = MeteoritesAdapter(this, list)
+
+        supportMapFragment.getMapAsync(this)
+
         return view
     }
 
@@ -230,10 +222,9 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
 
     override fun onClick(meteorite: Meteorite) {
         viewModel.selectItem(meteorite)
-        val meteoriteDetailFragment = MeteoriteDetailFragment()
 
         (activity as MainActivity).supportFragmentManager.beginTransaction()
-            .add(R.id.frame_layout, MeteoriteDetailFragment(), null)
+            .replace(R.id.frame_layout, MeteoriteDetailFragment(), null)
            .addToBackStack("")
             .commit()
     }
