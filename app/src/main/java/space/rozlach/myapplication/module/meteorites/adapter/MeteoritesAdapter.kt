@@ -11,8 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import space.rozlach.myapplication.R
 import space.rozlach.myapplication.module.map.model.Meteorite
 
-class MeteoritesAdapter(private val fragment: Fragment,private val meteorites: List<Meteorite>) : RecyclerView.Adapter<MeteoritesAdapter.ViewHolder>() {
-//    var meteoriteList = ArrayList<Meteorite?>()
+class MeteoritesAdapter(fragment: Fragment, private val meteorites: List<Meteorite>) : RecyclerView.Adapter<MeteoritesAdapter.ViewHolder>() {
 
     private val callback: OnClick = fragment as OnClick
 
@@ -33,13 +32,8 @@ class MeteoritesAdapter(private val fragment: Fragment,private val meteorites: L
 
     // binds the list items to a view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-//        meteoriteMutableList = meteorites
         val meteorite = meteorites[position]
 
-        // sets the image to the imageview from our itemHolder class
-
-        // sets the text to the textview from our itemHolder class
         holder.textView.text = meteorite.name
         holder.meteoriteTypeName.text = meteorite.nameType
         holder.meteoriteMass.text = meteorite.mass
@@ -50,20 +44,7 @@ class MeteoritesAdapter(private val fragment: Fragment,private val meteorites: L
         holder.itemView.setOnClickListener {
             callback.onClick(meteorite)
         }
-
-
     }
-
-    interface UpdateData {
-        fun updateMeteoritesList(list: List<Meteorite>)
-
-    }
-//    @SuppressLint("NotifyDataSetChanged")
-//    fun updateMeteoritesList(meteorites: ArrayList<Meteorite?>) {
-//        meteoriteList.clear()
-//        meteoriteList = meteorites
-//        notifyDataSetChanged()
-//    }
 
     // return the number of the items in the list
     override fun getItemCount(): Int {

@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -109,31 +108,19 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
 
     override fun onMapReady(map: GoogleMap) {
         myMap = map
-
-
-//            myMap.apply {
         viewModel.meteoritesList.observe(activity as MainActivity, Observer {
             meteoritesList.addAll(it)
-            meteoritesList.forEach {
-                println(it.year)
-                println(it.name)
-
-            }
             for (i in 0 until meteoritesList.size) {
                 val position = meteoritesList[i].position
                 myMap!!.addMarker(
                     MarkerOptions()
                         .position(position)
-                        //.title(name)
-                        //.snippet(name.toString() + " is cool")
-                        // .icon(BitmapDescriptorFactory
-                        //       .fromResource(R.drawable.ic_map_pin )))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
                 )
 
             }
         })
-//            }
+
 
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
@@ -166,10 +153,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
             )
                 myMap!!.isMyLocationEnabled = true
         }
-    }
-
-    private fun isLocationGranted() {
-
     }
 
     private fun requestPermission() {
@@ -225,7 +208,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
 
         (activity as MainActivity).supportFragmentManager.beginTransaction()
             .replace(R.id.frame_layout, MeteoriteDetailFragment(), null)
-           .addToBackStack("")
+            .addToBackStack("")
             .commit()
     }
 

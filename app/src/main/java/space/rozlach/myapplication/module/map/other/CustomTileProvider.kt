@@ -1,3 +1,4 @@
+
 package space.rozlach.myapplication.module.map.other
 
 import android.content.res.AssetManager
