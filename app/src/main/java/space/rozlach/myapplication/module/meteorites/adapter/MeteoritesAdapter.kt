@@ -1,23 +1,21 @@
 package space.rozlach.myapplication.module.meteorites.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import space.rozlach.myapplication.R
-import space.rozlach.myapplication.module.map.model.Meteorite
+import space.rozlach.myapplication.features.data.remote.dto.MeteoriteDto
 
-class MeteoritesAdapter(fragment: Fragment, private val meteorites: List<Meteorite>) : RecyclerView.Adapter<MeteoritesAdapter.ViewHolder>() {
+class MeteoritesAdapter(fragment: Fragment, private val meteoriteDtos: List<MeteoriteDto>) : RecyclerView.Adapter<MeteoritesAdapter.ViewHolder>() {
 
     private val callback: OnClick = fragment as OnClick
 
 
     interface OnClick {
-        fun onClick(meteorite: Meteorite)
+        fun onClick(meteoriteDto: MeteoriteDto)
     }
 
 
@@ -32,7 +30,7 @@ class MeteoritesAdapter(fragment: Fragment, private val meteorites: List<Meteori
 
     // binds the list items to a view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val meteorite = meteorites[position]
+        val meteorite = meteoriteDtos[position]
 
         holder.textView.text = meteorite.name
         holder.meteoriteTypeName.text = meteorite.nameType
@@ -48,7 +46,7 @@ class MeteoritesAdapter(fragment: Fragment, private val meteorites: List<Meteori
 
     // return the number of the items in the list
     override fun getItemCount(): Int {
-        return meteorites.size
+        return meteoriteDtos.size
     }
 
     // Holds the views for adding it to image and text

@@ -1,4 +1,4 @@
-package space.rozlach.myapplication.module.api
+package space.rozlach.myapplication.features.data.remote
 
 import okhttp3.OkHttpClient
 import okhttp3.Request

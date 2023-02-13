@@ -1,33 +1,29 @@
 package space.rozlach.myapplication.module.service
 
-import android.app.job.JobParameters
-import android.app.job.JobService
 import android.content.Context
-import android.util.Log
-import androidx.work.Worker
+import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import space.rozlach.myapplication.module.api.ApiFactory
-import space.rozlach.myapplication.module.database.AppDatabase
-import space.rozlach.myapplication.module.map.model.Meteorite
+import retrofit2.HttpException
+import space.rozlach.myapplication.features.data.remote.ApiService
+import space.rozlach.myapplication.features.data.repository.MeteoritesInfoRepositoryImpl
+import javax.inject.Inject
 
-class MyWorker(private val context: Context, workerParameters: WorkerParameters) :
-    Worker(context, workerParameters) {
+class MyWorker @Inject constructor(
+    private val context: Context,
+    private val meteoriteRepository: MeteoritesInfoRepositoryImpl,
+    workerParameters: WorkerParameters
+) :
+    CoroutineWorker(context, workerParameters) {
 
-    override fun doWork(): Result {
-        val call = ApiFactory.apiService.getListOfMeteorites()
-        val response = call.execute()
-        val db = AppDatabase.getInstance(context)
+    override suspend fun doWork(): Result {
 
-        if (response.code() == 200) {
-            if (!response.body().isNullOrEmpty()) {
-                db.meteoritesInfoDao().insertListOfMeteorites(response.body()!!)
-                Log.d("WORKER_200",response.body().toString())
-            }
-        } else
-            return Result.retry()
-
-
-        return Result.retry()
+      try {
+          meteoriteRepository.getMeteorites()
+      }catch (e: HttpException)
+      {
+          return Result.retry()
+      }
+        return Result.success()
     }
 
 

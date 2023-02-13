@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import space.rozlach.myapplication.MainActivity
 import space.rozlach.myapplication.R
 import space.rozlach.myapplication.module.MeteoriteViewModel
-import space.rozlach.myapplication.module.map.model.Meteorite
+import space.rozlach.myapplication.features.data.remote.dto.MeteoriteDto
 import space.rozlach.myapplication.module.meteorites.adapter.MeteoritesAdapter
 
 // TODO: Rename parameter arguments, choose names that match
@@ -34,7 +34,7 @@ class MeteoritesListFragment : Fragment(){
     private lateinit var viewModel: MeteoriteViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var meteoritesAdapter: MeteoritesAdapter
-    private var list=  ArrayList<Meteorite>()
+    private var list=  ArrayList<MeteoriteDto>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {

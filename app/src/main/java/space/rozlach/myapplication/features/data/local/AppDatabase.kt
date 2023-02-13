@@ -1,14 +1,15 @@
-package space.rozlach.myapplication.module.database
+package space.rozlach.myapplication.features.data.local
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import space.rozlach.myapplication.module.map.model.Meteorite
+import space.rozlach.myapplication.features.data.remote.dto.MeteoriteDto
 
-@Database(entities = [Meteorite::class], version = 3, exportSchema = false)
+@Database(entities = [MeteoriteDto::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
+
+    abstract val dao: MeteoritesInfoDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null

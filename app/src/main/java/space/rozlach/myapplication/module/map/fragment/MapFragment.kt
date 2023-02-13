@@ -28,7 +28,7 @@ import pub.devrel.easypermissions.EasyPermissions
 import space.rozlach.myapplication.MainActivity
 import space.rozlach.myapplication.R
 import space.rozlach.myapplication.module.MeteoriteViewModel
-import space.rozlach.myapplication.module.map.model.Meteorite
+import space.rozlach.myapplication.features.data.remote.dto.MeteoriteDto
 import space.rozlach.myapplication.module.map.other.CustomMapTileProvider
 import space.rozlach.myapplication.module.meteorites.adapter.MeteoritesAdapter
 import space.rozlach.myapplication.module.meteorites.fragment.MeteoriteDetailFragment
@@ -40,13 +40,13 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
     EasyPermissions.PermissionCallbacks, MeteoritesAdapter.OnClick {
 
     private final var myMap: GoogleMap? = null
-    private var clusterManager: ClusterManager<Meteorite>? = null
+    private var clusterManager: ClusterManager<MeteoriteDto>? = null
     private lateinit var viewModel: MeteoriteViewModel
-    private var meteoritesList = mutableListOf<Meteorite>()
+    private var meteoritesList = mutableListOf<MeteoriteDto>()
     var mBottomSheetBehavior2: BottomSheetBehavior<View>? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var meteoritesAdapter: MeteoritesAdapter
-    private var list = ArrayList<Meteorite>()
+    private var list = ArrayList<MeteoriteDto>()
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
@@ -203,8 +203,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnCameraIdleListen
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
-    override fun onClick(meteorite: Meteorite) {
-        viewModel.selectItem(meteorite)
+    override fun onClick(meteoriteDto: MeteoriteDto) {
+        viewModel.selectItem(meteoriteDto)
 
         (activity as MainActivity).supportFragmentManager.beginTransaction()
             .replace(R.id.frame_layout, MeteoriteDetailFragment(), null)

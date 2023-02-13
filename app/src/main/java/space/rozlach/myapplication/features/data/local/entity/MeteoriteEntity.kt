@@ -1,18 +1,13 @@
-package space.rozlach.myapplication.module.map.model
+package space.rozlach.myapplication.features.data.local.entity
 
-import androidx.annotation.NonNull
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.android.gms.maps.model.LatLng
 import com.google.gson.annotations.Expose
-
 import com.google.gson.annotations.SerializedName
-import com.google.maps.android.clustering.ClusterItem
-import org.jetbrains.annotations.NotNull
+import space.rozlach.myapplication.features.domain.model.Meteorite
 
 @Entity(tableName = "meteorites_info")
-data class Meteorite(
+data class MeteoriteEntity(
     @SerializedName("name")
     @Expose
     var name: String? = null,
@@ -20,7 +15,7 @@ data class Meteorite(
     @PrimaryKey
     @SerializedName("id")
     @Expose
-    var id: String,
+    var id: Int? = null,
 
     @SerializedName("nametype")
     @Expose
@@ -49,23 +44,17 @@ data class Meteorite(
     @SerializedName("reclong")
     @Expose
     var recLong: String? = null,
+){
+    fun toMeteorite(): Meteorite {
 
-//    @SerializedName("geolocation")
-//    @Expose
-//    var geolocation: Geolocation? = null
-): ClusterItem{
-    override fun getPosition(): LatLng {
-        return LatLng( recLat!!.fullTrim().toDouble(),recLong!!.fullTrim().toDouble())
+        return Meteorite(
+            name = name,
+            nameType = nameType,
+            mass = mass,
+            fall = fall,
+            year = year,
+            recLat = recLat,
+            recLong = recLong
+        )
     }
-
-    override fun getTitle(): String? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getSnippet(): String? {
-        TODO("Not yet implemented")
-    }
-
-    private fun String.fullTrim() = trim().replace("\uFEFF", "")
-
 }
